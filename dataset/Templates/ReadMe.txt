@@ -1,0 +1,1 @@
+Since large negative samples are required in the training process, there are more templates in "Templates_For_Training.xlsx" with greater universality, which undoubtedly increases false positives. Therefore, we use more accurate templates screened by experts in the prediction in "Template.xlsx".
