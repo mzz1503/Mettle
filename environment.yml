@@ -1,4 +1,4 @@
-name: ConMeter
+name: Mettle
 channels:
   - pytorch
   - nvidia
