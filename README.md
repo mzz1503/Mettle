@@ -1,4 +1,4 @@
-# ConMeter
+# Mettle
 
 ### Prerequisites
 - Linux (Tested on CentOs 7.9.2009)
@@ -16,7 +16,7 @@ A complete environment configuration file is provided, and installation can be c
 conda env create -f environment.yml
 
 # Activate the environment
-conda activate ConMeter
+conda activate Mettle
 ```
 
 ## Download trained models and processed data.
