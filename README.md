@@ -22,9 +22,9 @@ conda activate Mettle
 ## Download trained models and processed data.
 
 The "trained models", "matched_data" and "processed_data" are ziped. 
-1. Download"data_processed.rar" under ##10.6084/m9.figshare.30827390##
+1. Download"data_processed.rar" under (10.6084/m9.figshare.30827390)
 Unzip to "dataset" directory.
-2. Download"trained_models.rar" under ##10.6084/m9.figshare.30827438##
+2. Download"trained_models.rar" under (10.6084/m9.figshare.30827438)
 Unzip to "trained_models" directory.
 
 The files' structure are:
