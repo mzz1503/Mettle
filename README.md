@@ -2,8 +2,7 @@
 
 Mettle predicts likely metabolites of a query molecule from its SMILES string. This repository contains the source code and the files needed to run the released model.
 
-The trained parameters are available. The metabolism reaction database is not. Processed fingerprint files (`.pkl`) were uploaded separately and are being removed; do not download or reuse `data_processed.rar` (https://doi.org/10.6084/m9.figshare.30827390).
-
+The trained parameters are available. The metabolism reaction database is not. 
 ## Prerequisites
 
 - Linux (tested on CentOS 7.9.2009)
