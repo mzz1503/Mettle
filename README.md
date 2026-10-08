@@ -1,89 +1,57 @@
 # Mettle
 
-### Prerequisites
-- Linux (Tested on CentOs 7.9.2009)
-- Python 3.7 (Tested on Python 3.7.13)
-- NVIDIA GPU (Tested on Tesla V100S-PCIE-32GB on local workstations)
-- CUDA (Tested on CUDA 11.8)
+Mettle predicts likely metabolites of a query molecule from its SMILES string. This repository contains the source code and the files needed to run the released model.
 
-## Environment Setup
+The trained parameters are available. The metabolism reaction database is not. Processed fingerprint files (`.pkl`) were uploaded separately and are being removed; do not download or reuse `data_processed.rar` (https://doi.org/10.6084/m9.figshare.30827390).
 
-### Using Conda Environment File (Recommended)
-A complete environment configuration file is provided, and installation can be completed with just two commands:
+## Prerequisites
 
-```bash
-# Create environment using the configuration file
-conda env create -f environment.yml
+- Linux (tested on CentOS 7.9.2009)
+- Python 3.7 (tested on Python 3.7.13)
+- An NVIDIA GPU (tested on a Tesla V100S-PCIE-32GB)
+- CUDA (tested on CUDA 11.8)
 
-# Activate the environment
-conda activate Mettle
-```
+## Setup
 
-## Download trained models and processed data.
+From the repository root:
 
-The "trained models", "matched_data" and "processed_data" are ziped. 
-1. Download"data_processed.rar" under (10.6084/m9.figshare.30827390)
-Unzip to "dataset" directory.
-2. Download"trained_models.rar" under (10.6084/m9.figshare.30827438)
-Unzip to "trained_models" directory.
+    conda env create -f environment.yml
+    conda activate Mettle
 
-The files' structure are:
-```
-├─dataset
-│  ├─matched_data
-│  ├─processed_data
-│  ├─Templates
-│  └─Test_data
-└─trained_models
-│  ├─HybridMixMerged
-│  ├─HybridMix_Contrastive_learning
-│  ├─HybridMix_Chemical_feature_interaction
-│  └─Base_Model
-```
+## Trained parameters
 
-## Code Base Structure
-The code base structure is explained below:
+Download `trained_models.rar` from https://doi.org/10.6084/m9.figshare.30827438 and extract it so the repository looks like this:
 
-Process dataset:
-- **1_generate_templates.py**: Extracting templates with greater universality for metabolic reactions for training.
-- **2_parallel_data_process_tasks.sh**: Set generate_candidates.py and preprocess_candidate.py to be sequential multitask processes
-    - **generate_candidates.py**: Match the template to get more negative samples for training. Result are saved in "/dataset/matched_data".
-    - **preprocess_candidate.py**: Generate molecular fingerprints for all positive and negative samples. Result are saved in "/dataset/processed_data".
+    trained_models
+    ├── Base_Model
+    ├── HybridMix_Chemical_feature_interaction
+    ├── HybridMix_Contrastive_learning
+    └── HybridMixMerged
 
-Train and test:
-- **3_main.py**: Script for running the training process. Input data are saved in "/dataset/processed_data"
-- **4_test.py**: Script for testing the external test sets 1 and 2.
-- **predict.py**: Script for predicting the metabolites of a compound.
+Each folder contains `roc_best/` and `prc_best/`. The checkpoint file in each fold is `params.ckpt`. Prediction below uses `HybridMixMerged`.
 
-- **/code/train_eval.py**: Script for detailed process of model training and validation.
-- **/code/model.py**: Contains PyTorch model definitions for the network.
-- **/code/utils.py**: Contains definitions for data preprocessing, etc...
+## Predict
 
-## Data matching and processing
-Here are example commands.
-###
-To generate templates for training
-```
-python 1_generate_templates.py 
-```
-###
-To get candidates for preparing positive samples and amount of negative samples, then get features for training. Because this task consumes a lot of CPU resources, multi-tasking processes are set up, and you can change the value of TOTAL_TASKS in parallel_data_process_tasks.sh to set a different number of processes
-```
-sh 2_parallel_data_process_tasks.sh
-```
+Run this from the `code` directory. Templates in `dataset/Templates/` are loaded automatically.
 
-## Training and Evaluation
-Here are example commands for training
-###
-Example shown below for training
-```
-python 3_main.py
-```
-Example shown below for testing
-```
-python 4_test.py
-```
-Example shown below for predict based on smiles, you need to input SMILES.
-```
-python predict.py --smiles "CC(C1=CN=C(NC2=CC(F)=C(O)C(F)=C2)N=C1N3C4CCCC4)(C)OC3=O" output 14f
-```
+    cd code
+    python predict.py --smiles "CC(C1=CN=C(NC2=CC(F)=C(O)C(F)=C2)N=C1N3C4CCCC4)(C)OC3=O" --output 14f
+
+The ranked candidates are written to `14f.xlsx`.
+
+## Test
+
+The two external test sets are included as `dataset/Test_data/test_1.xlsx` and `dataset/Test_data/test_2.xlsx`. From the `code` directory, with the weights extracted as above:
+
+    python 4_test.py --test_file ../dataset/Test_data/test_1.xlsx
+    python 4_test.py --test_file ../dataset/Test_data/test_2.xlsx
+
+`--model_name` accepts `HybridMixMerged` (default), `HybridMix_Contrastive_learning`, `HybridMix_Chemical_feature_interaction`, or `Base_Model`.
+
+## Retraining
+
+`1_generate_templates.py`, `2_parallel_data_process_tasks.sh`, `generate_candidates.py`, `preprocess_candidates.py`, and `3_main.py` expect a reaction table supplied by the user. Paths are set in `code/config.py`. The authors' reaction database and processed `.pkl` files are not part of this release.
+
+## License
+
+The code in this repository is released under the [MIT License](LICENSE). That license does not cover the trained-weight archive on Figshare, and it does not cover records from third-party databases used to build the training set. The MDL Drug Data Report (MDDR, version 2010) is a commercial database and is not redistributed here.
