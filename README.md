@@ -49,7 +49,7 @@ The two external test sets are included as `dataset/Test_data/test_1.xlsx` and `
 
 ## Retraining
 
-`1_generate_templates.py`, `2_parallel_data_process_tasks.sh`, `generate_candidates.py`, `preprocess_candidates.py`, and `3_main.py` expect a reaction table supplied by the user. Paths are set in `code/config.py`. The authors' reaction database and processed `.pkl` files are not part of this release.
+`1_generate_templates.py`, `2_parallel_data_process_tasks.sh`, `generate_candidates.py`, `preprocess_candidates.py`, and `3_main.py` expect a reaction table supplied by the user.
 
 ## License
 
